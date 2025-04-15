@@ -1,8 +1,6 @@
 {
-  "input": {
-    "zipFile": "TMTRF20250407.zip"
-  },
+  "version": "20250407",
   "output": {
-    "fileName": "TMT-CS-output.json"
+    "fileName": "TMT-CS.json"
   }
 } 

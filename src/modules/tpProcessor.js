@@ -168,7 +168,7 @@ function createTPConcept(tpCode, tpDisplay) {
       },
       {
         code: "abstract",
-        valueBoolean: "true"
+        valueBoolean: "false"
       }
     ]
   };

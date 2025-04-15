@@ -179,7 +179,7 @@ function createGPConcept(gpCode, gpDisplay) {
       },
       {
         code: "abstract",
-        valueBoolean: "true"
+        valueBoolean: "false"
       }
     ]
   };

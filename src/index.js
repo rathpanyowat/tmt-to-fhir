@@ -29,11 +29,9 @@ try {
   console.error('Error loading configuration:', error);
   console.log('Using default configuration');
   config = {
-    input: {
-      zipFile: "TMTRF20250407.zip"
-    },
+    version: "20250407",
     output: {
-      fileName: "TMT-CS-output.json"
+      fileName: "TMT-CS.json"
     }
   };
 }
@@ -43,16 +41,34 @@ const BASE_DIR = path.join(__dirname, '..');
 const INPUT_DIR = path.join(BASE_DIR, 'input');
 const OUTPUT_DIR = path.join(BASE_DIR, 'output');
 const TEMPLATE_FILE = path.join(INPUT_DIR, 'TMT-CS-template.json');
-const ZIP_FILE = path.join(INPUT_DIR, config.input.zipFile);
+const ZIP_FILE = path.join(INPUT_DIR, `TMTRF${config.version}.zip`);
 const EXTRACT_DIR = path.join(BASE_DIR, 'temp');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, config.output.fileName);
+
+/**
+ * Formats a date string in the format YYYYMMDD to YYYY-MM-DD
+ * @param {string} versionDate - Date in YYYYMMDD format
+ * @returns {string} Date in YYYY-MM-DD format
+ */
+function formatDateFromVersion(versionDate) {
+  if (!versionDate || versionDate.length !== 8) {
+    return "";
+  }
+  
+  const year = versionDate.substring(0, 4);
+  const month = versionDate.substring(4, 6);
+  const day = versionDate.substring(6, 8);
+  
+  return `${year}-${month}-${day}T00:00:00+07:00`;
+}
 
 /**
  * Main function to process the TMT data
  */
 async function processTMTData() {
   console.log('TMT to FHIR Converter started');
-  console.log(`Using input zip file: ${config.input.zipFile}`);
+  console.log(`Using version: ${config.version}`);
+  console.log(`Using zip file: TMTRF${config.version}.zip`);
   
   try {
     // Ensure output and temp directories exist
@@ -67,6 +83,11 @@ async function processTMTData() {
     // Read the template file
     console.log('Reading template file...');
     const templateJson = readJsonFile(TEMPLATE_FILE);
+    
+    // Update version and date in the template
+    templateJson.version = config.version;
+    templateJson.date = formatDateFromVersion(config.version);
+    templateJson.title = `Thai Medicines Terminology (TMT) ${config.version}`;
     
     // Remove the TEMPLATE concept from the template before adding new concepts
     console.log('Removing template concept from JSON...');
