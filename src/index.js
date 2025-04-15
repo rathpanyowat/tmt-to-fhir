@@ -18,6 +18,7 @@ const { processTPUData } = require('./modules/tpuProcessor');
 const { processTPData } = require('./modules/tpProcessor');
 const { processGPUData } = require('./modules/gpuProcessor');
 const { processGPPData } = require('./modules/gppProcessor');
+const { processTPPData } = require('./modules/tppProcessor');
 
 // Load configuration
 let config;
@@ -131,6 +132,9 @@ async function processTMTData() {
     
     // Step 6: Process TP data
     processTPData(templateJson, tmtDir.path, tmtBonusDir.path);
+    
+    // Step 7: Process TPP data
+    processTPPData(templateJson, tmtDir.path, tmtBonusDir.path);
     
     // Write the output file
     console.log('Writing output file...');
