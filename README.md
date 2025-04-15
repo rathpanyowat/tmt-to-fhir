@@ -12,8 +12,6 @@ This Node.js application processes Thai Medicines Terminology (TMT) data from Ex
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/yourusername/tmt-to-fhir.git
-cd tmt-to-fhir
 npm install
 ```
 
@@ -21,8 +19,7 @@ npm install
 
 Place your input files in the `input` directory:
 
-1. **TMT-CS-template.json** - The FHIR CodeSystem template file (this file name is fixed)
-2. **TMTRFYYYYMMDD.zip** - The zip file containing TMT data (the name of this file is configurable)
+1. **TMTRFYYYYMMDD.zip** - The zip file containing TMT data (the name of this file is configurable)
 
 The zip file should contain:
 - TMTRFYYYYMMDD folder with TMTRFYYYYMMDD_SNAPSHOT.xls
@@ -34,16 +31,14 @@ The application uses a configuration file (`config.json`) to specify which input
 
 ```json
 {
-  "input": {
-    "zipFile": "TMTRF20250407.zip"
-  },
+  "version": "20250407",
   "output": {
-    "fileName": "TMT-CS-output.json"
+    "fileName": "TMT-CS.json"
   }
-}
+} 
 ```
 
-When you receive a new TMT zip file, simply update the `zipFile` value in `config.json` to point to the new file, then run the application.
+When you receive a new TMT zip file, simply update the `version` value in `config.json` to point to the new file, then run the application.
 
 ## Usage
 
@@ -59,23 +54,4 @@ The application will:
 3. Read the template file (TMT-CS-template.json)
 4. Process the TPU data from the SNAPSHOT.xls file
 5. Establish parent-child relationships from relationship files
-6. Output the result to the specified output file (default: `output/TMT-CS-output.json`)
-
-## Data Processing
-
-The application processes the following data:
-
-1. **TPU (Trade Product Unit) data**:
-   - Maps TPU codes and their display names from the SNAPSHOT.xls file
-   - Finds GPU parents from GPUtoTPUYYYYMMDD.xls
-   - Finds TP parents from TPtoTPUYYYYMMDD.xls
-   - Finds TPP children from TPUtoTPPYYYYMMDD.xls
-
-2. **TP (Trade Product) data**:
-   - Maps TP codes and display names from Concept/TPYYYYMMDD.xls
-   - Finds GP parents from Relationship/GPtoTPYYYYMMDD.xls
-   - Finds TPU children from Relationship/TPtoTPUYYYYMMDD.xls
-
-## License
-
-ISC
+6. Output the result to the specified output file (default: `output/TMT-CS.json`)

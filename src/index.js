@@ -120,6 +120,7 @@ async function processTMTData() {
     
     console.log(`Processing data from ${tmtDir.name}...`);
     
+    // Process data in sequence
     // Step 2: Process SUBS data
     processSUBSData(templateJson, tmtDir.path, tmtBonusDir.path);
     
