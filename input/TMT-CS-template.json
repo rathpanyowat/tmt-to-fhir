@@ -1,0 +1,209 @@
+{
+  "resourceType": "CodeSystem",
+  "url": "http://tmt.this.or.th",
+  "version": "20250407",
+  "name": "TMT",
+  "title": "Thai Medicines Terminology (TMT) 20250407",
+  "status": "active",
+  "experimental": false,
+  "date": "2025-04-07T00:00:00+07:00",
+  "publisher": "Thai Health Information Standards Development Center",
+  "description": "LOINC is a common language (set of identifiers, names, and codes) for clinical and laboratory observations.",
+  "copyright": "This content from TMT® is copyright © Thai Health Information Standards Development Center",
+  "caseSensitive": false,
+  "valueSet": "http://tmt.this.or.th/vs",
+  "hierarchyMeaning": "is-a",
+  "compositional": false,
+  "versionNeeded": false,
+  "content": "complete",
+  "filter": [
+    {
+      "code": "CLASS",
+      "description": "Allows the selection of a set of TMT codes with a common property value.",
+      "operator": [
+        "="
+      ],
+      "value": "The value of the property."
+    },
+    {
+      "code": "STATUS",
+      "description": "Allows the selection of a set of TMT codes with a common property value.",
+      "operator": [
+        "="
+      ],
+      "value": "The value of the property."
+    },
+    {
+      "code": "parent",
+      "description": "Allows for the selection of a set of codes base on their appearance in the TMT hierarchy.",
+      "operator": [
+        "exists",
+        "=",
+        "in"
+      ],
+      "value": "The value of the property."
+    },
+    {
+      "code": "child",
+      "description": "Allows for the selection of a set of codes base on their appearance in the TMT hierarchy.",
+      "operator": [
+        "exists",
+        "=",
+        "in"
+      ],
+      "value": "The value of the property."
+    }
+  ],
+  "property": [
+    {
+      "code": "class",
+      "type": "code"
+    },
+    {
+      "code": "status",
+      "uri": "http://hl7.org/fhir/concept-properties#status",
+      "type": "code"
+    },
+    {
+      "code": "abstract",
+      "uri": "http://hl7.org/fhir/concept-properties#notSelectable",
+      "type": "boolean"
+    },
+    {
+      "code": "parent",
+      "uri": "http://hl7.org/fhir/concept-properties#parent",
+      "type": "code"
+    },
+    {
+      "code": "child",
+      "uri": "http://hl7.org/fhir/concept-properties#child",
+      "type": "code"
+    }
+  ],
+  "concept": [
+    {
+      "code": "SUBS",
+      "display": "SUBS",
+      "property": [
+        {
+          "code": "status",
+          "valueCode": "active"
+        },
+        {
+          "code": "abstract",
+          "valueBoolean": "true"
+        }
+      ]
+    },
+    {
+      "code": "VTM",
+      "display": "VTM",
+      "property": [
+        {
+          "code": "status",
+          "valueCode": "active"
+        },
+        {
+          "code": "abstract",
+          "valueBoolean": "true"
+        }
+      ]
+    },
+    {
+      "code": "GP",
+      "display": "GP",
+      "property": [
+        {
+          "code": "status",
+          "valueCode": "active"
+        },
+        {
+          "code": "abstract",
+          "valueBoolean": "true"
+        }
+      ]
+    },
+    {
+      "code": "GPU",
+      "display": "GPU",
+      "property": [
+        {
+          "code": "status",
+          "valueCode": "active"
+        },
+        {
+          "code": "abstract",
+          "valueBoolean": "true"
+        }
+      ]
+    },
+    {
+      "code": "TP",
+      "display": "TP",
+      "property": [
+        {
+          "code": "status",
+          "valueCode": "active"
+        },
+        {
+          "code": "abstract",
+          "valueBoolean": "true"
+        }
+      ]
+    },
+    {
+      "code": "TPU",
+      "display": "TPU",
+      "property": [
+        {
+          "code": "status",
+          "valueCode": "active"
+        },
+        {
+          "code": "abstract",
+          "valueBoolean": "true"
+        }
+      ]
+    },
+    {
+      "code": "TPP",
+      "display": "TPP",
+      "property": [
+        {
+          "code": "status",
+          "valueCode": "active"
+        },
+        {
+          "code": "abstract",
+          "valueBoolean": "true"
+        }
+      ]
+    },
+    {
+      "code": "TEMPLATE",
+      "display": "TEMPLATE",
+      "property": [
+        {
+          "code": "class",
+          "valueCode": "TEMPLATE"
+        },
+        {
+          "code": "status",
+          "valueCode": "active"
+        },
+        {
+          "code": "abstract",
+          "valueBoolean": "true"
+        },
+        {
+          "code": "parent",
+          "valueCode": "TEMPLATE"
+        },
+        {
+          "code": "child",
+          "valueCode": "TEMPLATE"
+        }
+      ]
+    }
+  ]
+}
