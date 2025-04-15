@@ -176,7 +176,7 @@ function createTPUConcept(tpuCode, tpuDisplay) {
       },
       {
         code: "abstract",
-        valueBoolean: "false"
+        valueBoolean: false
       }
     ]
   };

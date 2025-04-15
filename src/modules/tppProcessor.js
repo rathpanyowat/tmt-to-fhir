@@ -190,7 +190,7 @@ function createTPPConcept(tppCode, tppDisplay) {
       },
       {
         code: "abstract",
-        valueBoolean: "false"
+        valueBoolean: false
       }
     ]
   };

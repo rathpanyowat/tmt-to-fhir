@@ -182,7 +182,7 @@ function createGPPConcept(gppCode, gppDisplay) {
       },
       {
         code: "abstract",
-        valueBoolean: "false"
+        valueBoolean: false
       }
     ]
   };

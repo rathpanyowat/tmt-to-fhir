@@ -179,7 +179,7 @@ function createGPUConcept(gpuCode, gpuDisplay) {
       },
       {
         code: "abstract",
-        valueBoolean: "false"
+        valueBoolean: false
       }
     ]
   };

@@ -19,6 +19,7 @@ const { processTPData } = require('./modules/tpProcessor');
 const { processGPUData } = require('./modules/gpuProcessor');
 const { processGPPData } = require('./modules/gppProcessor');
 const { processTPPData } = require('./modules/tppProcessor');
+const { processVTMData } = require('./modules/vtmProcessor');
 
 // Load configuration
 let config;
@@ -118,22 +119,25 @@ async function processTMTData() {
     
     console.log(`Processing data from ${tmtDir.name}...`);
     
-    // Step 2: Process GP data
+    // Step 2: Process VTM data
+    processVTMData(templateJson, tmtDir.path, tmtBonusDir.path);
+    
+    // Step 3: Process GP data
     processGPData(templateJson, tmtDir.path, tmtBonusDir.path);
     
-    // Step 3: Process GPU data
+    // Step 4: Process GPU data
     processGPUData(templateJson, tmtDir.path, tmtBonusDir.path);
     
-    // Step 4: Process GPP data
+    // Step 5: Process GPP data
     processGPPData(templateJson, tmtDir.path, tmtBonusDir.path);
     
-    // Step 5: Process TPU data
+    // Step 6: Process TPU data
     processTPUData(templateJson, tmtDir.path, tmtBonusDir.path);
     
-    // Step 6: Process TP data
+    // Step 7: Process TP data
     processTPData(templateJson, tmtDir.path, tmtBonusDir.path);
     
-    // Step 7: Process TPP data
+    // Step 8: Process TPP data
     processTPPData(templateJson, tmtDir.path, tmtBonusDir.path);
     
     // Write the output file
