@@ -87,10 +87,13 @@ async function processTMTData() {
     
     console.log(`Processing data from ${tmtDir.name}...`);
     
-    // Step 2: Process TPU data
+    // Step 2: Process GP data
+    processGPData(templateJson, tmtDir.path, tmtBonusDir.path);
+    
+    // Step 3: Process TPU data
     processTPUData(templateJson, tmtDir.path, tmtBonusDir.path);
     
-    // Step 3: Process TP data
+    // Step 4: Process TP data
     processTPData(templateJson, tmtDir.path, tmtBonusDir.path);
     
     // Write the output file
@@ -132,6 +135,206 @@ function exploreDirectory(dir, relativePath = '') {
   }
   
   return result;
+}
+
+/**
+ * Process GP data from the GP file and update the template
+ */
+function processGPData(templateJson, tmtDirPath, tmtBonusDirPath) {
+  console.log('Processing GP data...');
+  
+  try {
+    // Find the Concept directory with GP file
+    const conceptDir = path.join(tmtBonusDirPath, 'Concept');
+    
+    // Check if the Concept directory exists
+    if (!fs.existsSync(conceptDir) || !fs.statSync(conceptDir).isDirectory()) {
+      console.log(`Files in ${tmtBonusDirPath}:`, fs.readdirSync(tmtBonusDirPath).join(', '));
+      throw new Error('Concept directory not found');
+    }
+    
+    // Find the GP file
+    const gpFilePattern = /^GP\d{8}\.xls$/i;
+    let gpFile = null;
+    
+    // List files in the directory and find the GP file
+    const conceptFiles = fs.readdirSync(conceptDir);
+    for (const file of conceptFiles) {
+      if (gpFilePattern.test(file)) {
+        gpFile = path.join(conceptDir, file);
+        break;
+      }
+    }
+    
+    if (!gpFile) {
+      console.log(`Files in ${conceptDir}:`, fs.readdirSync(conceptDir).join(', '));
+      throw new Error('GP file not found');
+    }
+    
+    console.log(`Found GP file: ${gpFile}`);
+    
+    // Find relationship files
+    const relationshipDir = path.join(tmtBonusDirPath, 'Relationship');
+    
+    // Check if the Relationship directory exists
+    if (!fs.existsSync(relationshipDir) || !fs.statSync(relationshipDir).isDirectory()) {
+      console.log(`Files in ${tmtBonusDirPath}:`, fs.readdirSync(tmtBonusDirPath).join(', '));
+      throw new Error('Relationship directory not found');
+    }
+    
+    // List all relationship files
+    const relationshipFiles = fs.readdirSync(relationshipDir);
+    console.log('Relationship files:', relationshipFiles);
+    
+    // Find the specific relationship files we need for GP
+    let vtmToGpFile = null;
+    let gpToTpFile = null;
+    let gpToGpuFile = null;
+    
+    for (const file of relationshipFiles) {
+      const lowerFile = file.toLowerCase();
+      if (lowerFile.includes('vtmtogp')) {
+        vtmToGpFile = path.join(relationshipDir, file);
+      } else if (lowerFile.includes('gptotp')) {
+        gpToTpFile = path.join(relationshipDir, file);
+      } else if (lowerFile.includes('gptogpu')) {
+        gpToGpuFile = path.join(relationshipDir, file);
+      }
+    }
+    
+    if (!vtmToGpFile || !gpToTpFile || !gpToGpuFile) {
+      throw new Error(`One or more relationship files not found for GP. 
+        VTM->GP: ${vtmToGpFile ? 'Found' : 'Not found'}
+        GP->TP: ${gpToTpFile ? 'Found' : 'Not found'}
+        GP->GPU: ${gpToGpuFile ? 'Found' : 'Not found'}`);
+    }
+    
+    console.log(`Found relationship files for GP: 
+      - VTMtoGP: ${vtmToGpFile}
+      - GPtoTP: ${gpToTpFile}
+      - GPtoGPU: ${gpToGpuFile}`);
+    
+    // Read the GP file
+    const gpWorkbook = XLSX.readFile(gpFile);
+    const gpSheet = gpWorkbook.Sheets[gpWorkbook.SheetNames[0]];
+    const gpRows = XLSX.utils.sheet_to_json(gpSheet, { header: 1 });
+    
+    console.log(`GP file loaded, ${gpRows.length} rows found`);
+    if (gpRows.length > 0) {
+      console.log('First row:', JSON.stringify(gpRows[0]));
+    }
+    
+    // Read the relationship files
+    const vtmToGpWorkbook = XLSX.readFile(vtmToGpFile);
+    const vtmToGpSheet = vtmToGpWorkbook.Sheets[vtmToGpWorkbook.SheetNames[0]];
+    const vtmToGpRows = XLSX.utils.sheet_to_json(vtmToGpSheet, { header: 1 });
+    
+    const gpToTpWorkbook = XLSX.readFile(gpToTpFile);
+    const gpToTpSheet = gpToTpWorkbook.Sheets[gpToTpWorkbook.SheetNames[0]];
+    const gpToTpRows = XLSX.utils.sheet_to_json(gpToTpSheet, { header: 1 });
+    
+    const gpToGpuWorkbook = XLSX.readFile(gpToGpuFile);
+    const gpToGpuSheet = gpToGpuWorkbook.Sheets[gpToGpuWorkbook.SheetNames[0]];
+    const gpToGpuRows = XLSX.utils.sheet_to_json(gpToGpuSheet, { header: 1 });
+    
+    console.log(`Relationship files loaded:
+      - VTMtoGP: ${vtmToGpRows.length} rows
+      - GPtoTP: ${gpToTpRows.length} rows
+      - GPtoGPU: ${gpToGpuRows.length} rows`);
+    
+    // Skip the header row (if any)
+    let startIndex = 0;
+    if (gpRows.length > 0 && gpRows[0] && gpRows[0][0] === 'TMTID(GP)') {
+      startIndex = 1;
+      console.log('Header row found, starting from row 1');
+    }
+    
+    // Process each GP row
+    let processedCount = 0;
+    for (let i = startIndex; i < gpRows.length; i++) {
+      if (!gpRows[i] || !gpRows[i][0]) continue; // Skip empty rows
+      
+      const gpCode = String(gpRows[i][0]);
+      const gpDisplay = String(gpRows[i][1] || '');
+      
+      // Create a new concept entry for GP
+      const gpConcept = {
+        code: gpCode,
+        display: gpDisplay,
+        property: [
+          {
+            code: "class",
+            valueCode: "GP"
+          },
+          {
+            code: "status",
+            valueCode: "active"
+          },
+          {
+            code: "abstract",
+            valueBoolean: "true"
+          }
+        ]
+      };
+      
+      // Find parent (VTM)
+      // Use GP code to find matching VTM in the VTMtoGP relationship file
+      const vtmParent = vtmToGpRows.find(row => 
+        row && row.length > 1 && String(row[1]) === gpCode
+      );
+      
+      if (vtmParent) {
+        gpConcept.property.push({
+          code: "parent",
+          valueCode: String(vtmParent[0])
+        });
+      }
+      
+      // Find children (TP)
+      // Use GP code to find matching TP in the GPtoTP relationship file
+      const tpChildren = gpToTpRows.filter(row => 
+        row && row.length > 1 && String(row[0]) === gpCode
+      );
+      
+      if (tpChildren && tpChildren.length > 0) {
+        tpChildren.forEach(child => {
+          gpConcept.property.push({
+            code: "child",
+            valueCode: String(child[1])
+          });
+        });
+      }
+      
+      // Find children (GPU)
+      // Use GP code to find matching GPU in the GPtoGPU relationship file
+      const gpuChildren = gpToGpuRows.filter(row => 
+        row && row.length > 1 && String(row[0]) === gpCode
+      );
+      
+      if (gpuChildren && gpuChildren.length > 0) {
+        gpuChildren.forEach(child => {
+          gpConcept.property.push({
+            code: "child",
+            valueCode: String(child[1])
+          });
+        });
+      }
+      
+      // Add the concept to the template
+      templateJson.concept.push(gpConcept);
+      processedCount++;
+      
+      // Log progress every 100 items
+      if (processedCount % 100 === 0) {
+        console.log(`Processed ${processedCount} GP concepts...`);
+      }
+    }
+    
+    console.log(`Added ${processedCount} GP concepts to the template`);
+  } catch (error) {
+    console.error('Error processing GP data:', error);
+    throw error;
+  }
 }
 
 /**
