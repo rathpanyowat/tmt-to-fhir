@@ -82,104 +82,6 @@
   ],
   "concept": [
     {
-      "code": "SUBS",
-      "display": "SUBS",
-      "property": [
-        {
-          "code": "status",
-          "valueCode": "active"
-        },
-        {
-          "code": "abstract",
-          "valueBoolean": "true"
-        }
-      ]
-    },
-    {
-      "code": "VTM",
-      "display": "VTM",
-      "property": [
-        {
-          "code": "status",
-          "valueCode": "active"
-        },
-        {
-          "code": "abstract",
-          "valueBoolean": "true"
-        }
-      ]
-    },
-    {
-      "code": "GP",
-      "display": "GP",
-      "property": [
-        {
-          "code": "status",
-          "valueCode": "active"
-        },
-        {
-          "code": "abstract",
-          "valueBoolean": "true"
-        }
-      ]
-    },
-    {
-      "code": "GPU",
-      "display": "GPU",
-      "property": [
-        {
-          "code": "status",
-          "valueCode": "active"
-        },
-        {
-          "code": "abstract",
-          "valueBoolean": "true"
-        }
-      ]
-    },
-    {
-      "code": "TP",
-      "display": "TP",
-      "property": [
-        {
-          "code": "status",
-          "valueCode": "active"
-        },
-        {
-          "code": "abstract",
-          "valueBoolean": "true"
-        }
-      ]
-    },
-    {
-      "code": "TPU",
-      "display": "TPU",
-      "property": [
-        {
-          "code": "status",
-          "valueCode": "active"
-        },
-        {
-          "code": "abstract",
-          "valueBoolean": "true"
-        }
-      ]
-    },
-    {
-      "code": "TPP",
-      "display": "TPP",
-      "property": [
-        {
-          "code": "status",
-          "valueCode": "active"
-        },
-        {
-          "code": "abstract",
-          "valueBoolean": "true"
-        }
-      ]
-    },
-    {
       "code": "TEMPLATE",
       "display": "TEMPLATE",
       "property": [
@@ -193,7 +95,7 @@
         },
         {
           "code": "abstract",
-          "valueBoolean": "true"
+          "valueBoolean": "false"
         },
         {
           "code": "parent",
