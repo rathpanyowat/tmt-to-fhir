@@ -173,6 +173,50 @@ class BaseProcessor {
       ]
     };
   }
+
+  /**
+   * Check and add parent relationship, preventing self-references
+   * @param {Object} concept - The concept object to add the parent to
+   * @param {string} parentCode - The parent code
+   * @param {string} conceptCode - The current concept code
+   * @returns {boolean} True if parent was added, false if skipped
+   */
+  addParentRelationship(concept, parentCode, conceptCode) {
+    // Skip self-references (prevent circular references)
+    if (String(parentCode) === String(conceptCode)) {
+      console.warn(`Warning: Skipping self-reference parent relationship for ${this.entityType} code ${conceptCode}`);
+      return false;
+    }
+    
+    concept.property.push({
+      code: "parent",
+      valueCode: String(parentCode)
+    });
+    
+    return true;
+  }
+
+  /**
+   * Check and add child relationship, preventing self-references
+   * @param {Object} concept - The concept object to add the child to
+   * @param {string} childCode - The child code
+   * @param {string} conceptCode - The current concept code
+   * @returns {boolean} True if child was added, false if skipped
+   */
+  addChildRelationship(concept, childCode, conceptCode) {
+    // Skip self-references (prevent circular references)
+    if (String(childCode) === String(conceptCode)) {
+      console.warn(`Warning: Skipping self-reference child relationship for ${this.entityType} code ${conceptCode}`);
+      return false;
+    }
+    
+    concept.property.push({
+      code: "child",
+      valueCode: String(childCode)
+    });
+    
+    return true;
+  }
 }
 
 module.exports = BaseProcessor; 

@@ -115,10 +115,7 @@ class TPProcessor extends BaseProcessor {
     );
     
     if (gpParent) {
-      tpConcept.property.push({
-        code: "parent",
-        valueCode: String(gpParent[0])
-      });
+      this.addParentRelationship(tpConcept, String(gpParent[0]), tpCode);
     }
   }
 
@@ -135,10 +132,7 @@ class TPProcessor extends BaseProcessor {
     
     if (tpuChildren && tpuChildren.length > 0) {
       tpuChildren.forEach(child => {
-        tpConcept.property.push({
-          code: "child",
-          valueCode: String(child[1])
-        });
+        this.addChildRelationship(tpConcept, String(child[1]), tpCode);
       });
     }
   }

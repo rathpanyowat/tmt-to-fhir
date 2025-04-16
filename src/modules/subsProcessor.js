@@ -108,10 +108,7 @@ class SUBSProcessor extends BaseProcessor {
     
     if (vtmChildren && vtmChildren.length > 0) {
       vtmChildren.forEach(child => {
-        subsConcept.property.push({
-          code: "child",
-          valueCode: String(child[1])
-        });
+        this.addChildRelationship(subsConcept, String(child[1]), subsCode);
       });
     }
   }

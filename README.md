@@ -34,11 +34,39 @@ The application uses a configuration file (`config.json`) to specify which input
   "version": "20250407",
   "output": {
     "fileName": "TMT-CS.json"
+  },
+  "validation": {
+    "cleanupInvalidReferences": true,
+    "generateReport": true
   }
 } 
 ```
 
 When you receive a new TMT zip file, simply update the `version` value in `config.json` to point to the new file, then run the application.
+
+## New Feature: Validation of Parent-Child Relationships
+
+The converter now includes validation of parent-child relationships to ensure referential integrity in the output file. This helps identify and optionally fix issues where concepts reference non-existent parents or children.
+
+### Configuration Options
+
+In `config.json`, you can control validation behavior:
+
+```json
+{
+  "validation": {
+    "cleanupInvalidReferences": true,
+    "generateReport": true
+  }
+}
+```
+
+- `cleanupInvalidReferences`: When set to `true`, any references to non-existent concepts will be removed from the output file.
+- `generateReport`: When set to `true`, a validation report will be generated in the output directory when invalid references are found.
+
+### Validation Report
+
+If invalid references are found, a `validation-report.json` file will be generated in the output directory with details about the problematic references.
 
 ## Usage
 

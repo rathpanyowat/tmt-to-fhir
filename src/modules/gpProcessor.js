@@ -123,10 +123,7 @@ class GPProcessor extends BaseProcessor {
     );
     
     if (vtmParent) {
-      gpConcept.property.push({
-        code: "parent",
-        valueCode: String(vtmParent[0])
-      });
+      this.addParentRelationship(gpConcept, String(vtmParent[0]), gpCode);
     }
   }
 
@@ -143,10 +140,7 @@ class GPProcessor extends BaseProcessor {
     
     if (tpChildren && tpChildren.length > 0) {
       tpChildren.forEach(child => {
-        gpConcept.property.push({
-          code: "child",
-          valueCode: String(child[1])
-        });
+        this.addChildRelationship(gpConcept, String(child[1]), gpCode);
       });
     }
   }
@@ -164,10 +158,7 @@ class GPProcessor extends BaseProcessor {
     
     if (gpuChildren && gpuChildren.length > 0) {
       gpuChildren.forEach(child => {
-        gpConcept.property.push({
-          code: "child",
-          valueCode: String(child[1])
-        });
+        this.addChildRelationship(gpConcept, String(child[1]), gpCode);
       });
     }
   }

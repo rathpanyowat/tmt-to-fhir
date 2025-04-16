@@ -35,6 +35,10 @@ try {
     version: "20250407",
     output: {
       fileName: "TMT-CS.json"
+    },
+    validation: {
+      cleanupInvalidReferences: true,
+      generateReport: true
     }
   };
 }
@@ -103,6 +107,131 @@ function removeDuplicateConcepts(templateJson) {
   console.log(`Total concepts after deduplication: ${templateJson.concept.length}`);
   
   return removedCount;
+}
+
+/**
+ * Validates that all parent and child references in the code system point to existing concepts
+ * @param {Object} templateJson - The template JSON object
+ * @param {boolean} cleanupInvalidRefs - Whether to remove invalid references
+ * @returns {Object} Object containing invalid references and statistics
+ */
+function validateParentChildReferences(templateJson, cleanupInvalidRefs = false) {
+  console.log('Validating parent-child references...');
+  
+  // Create a set of all concept codes for quick lookup
+  const conceptCodes = new Set();
+  templateJson.concept.forEach(concept => {
+    if (concept && concept.code) {
+      conceptCodes.add(concept.code);
+    }
+  });
+  
+  // Track invalid references
+  const invalidReferences = {
+    parent: [],
+    child: []
+  };
+  
+  let removedCount = 0;
+  
+  // Check all concepts for invalid parent/child references
+  templateJson.concept.forEach(concept => {
+    if (!concept.property) return;
+    
+    if (cleanupInvalidRefs) {
+      // Filter out invalid references if cleanup is enabled
+      const validProperties = concept.property.filter(property => {
+        if (property.code === "parent" && property.valueCode) {
+          if (!conceptCodes.has(property.valueCode)) {
+            invalidReferences.parent.push({
+              concept: concept.code,
+              reference: property.valueCode
+            });
+            removedCount++;
+            return false;
+          }
+        }
+        
+        if (property.code === "child" && property.valueCode) {
+          if (!conceptCodes.has(property.valueCode)) {
+            invalidReferences.child.push({
+              concept: concept.code,
+              reference: property.valueCode
+            });
+            removedCount++;
+            return false;
+          }
+        }
+        
+        return true;
+      });
+      
+      concept.property = validProperties;
+    } else {
+      // Just track invalid references without removing them
+      concept.property.forEach(property => {
+        if (property.code === "parent" && property.valueCode) {
+          if (!conceptCodes.has(property.valueCode)) {
+            invalidReferences.parent.push({
+              concept: concept.code,
+              reference: property.valueCode
+            });
+          }
+        }
+        
+        if (property.code === "child" && property.valueCode) {
+          if (!conceptCodes.has(property.valueCode)) {
+            invalidReferences.child.push({
+              concept: concept.code,
+              reference: property.valueCode
+            });
+          }
+        }
+      });
+    }
+  });
+  
+  // Log results
+  const totalInvalid = invalidReferences.parent.length + invalidReferences.child.length;
+  if (totalInvalid === 0) {
+    console.log('All parent-child references are valid.');
+  } else {
+    console.log(`Found ${totalInvalid} invalid references:`);
+    console.log(`- ${invalidReferences.parent.length} invalid parent references`);
+    console.log(`- ${invalidReferences.child.length} invalid child references`);
+    
+    if (cleanupInvalidRefs) {
+      console.log(`Removed ${removedCount} invalid references`);
+    }
+    
+    // Log some examples if there are many invalid references
+    if (invalidReferences.parent.length > 0) {
+      const examples = invalidReferences.parent.slice(0, Math.min(5, invalidReferences.parent.length));
+      console.log('Example invalid parent references:');
+      examples.forEach(example => {
+        console.log(`  Concept ${example.concept} references non-existent parent ${example.reference}`);
+      });
+    }
+    
+    if (invalidReferences.child.length > 0) {
+      const examples = invalidReferences.child.slice(0, Math.min(5, invalidReferences.child.length));
+      console.log('Example invalid child references:');
+      examples.forEach(example => {
+        console.log(`  Concept ${example.concept} references non-existent child ${example.reference}`);
+      });
+    }
+  }
+  
+  return {
+    valid: totalInvalid === 0,
+    invalidReferences,
+    stats: {
+      totalConcepts: templateJson.concept.length,
+      invalidParentRefs: invalidReferences.parent.length,
+      invalidChildRefs: invalidReferences.child.length,
+      removedCount: cleanupInvalidRefs ? removedCount : 0
+    }
+  };
 }
 
 /**
@@ -185,6 +314,12 @@ async function processTMTData() {
     // Step 9: Process TPP data
     processTPPData(templateJson, tmtDir.path, tmtBonusDir.path);
     
+    // New Step: Validate parent-child references
+    const cleanupInvalidRefs = config.validation && config.validation.cleanupInvalidReferences !== undefined 
+      ? config.validation.cleanupInvalidReferences 
+      : false;
+    const validationResult = validateParentChildReferences(templateJson, cleanupInvalidRefs);
+    
     // Step 10: Remove duplicate concepts
     console.log('Removing duplicate concepts...');
     removeDuplicateConcepts(templateJson);
@@ -194,6 +329,17 @@ async function processTMTData() {
     writeJsonFile(OUTPUT_FILE, templateJson);
     
     console.log(`Conversion completed. Output saved to: ${OUTPUT_FILE}`);
+    
+    // Write validation results to a separate file if there are invalid references
+    if (!validationResult.valid && config.validation && config.validation.generateReport) {
+      const validationFilePath = path.join(OUTPUT_DIR, 'validation-report.json');
+      writeJsonFile(validationFilePath, {
+        version: config.version,
+        date: new Date().toISOString(),
+        validation: validationResult
+      });
+      console.log(`Validation report saved to: ${validationFilePath}`);
+    }
   } catch (error) {
     console.error('Error processing TMT data:', error);
   } finally {

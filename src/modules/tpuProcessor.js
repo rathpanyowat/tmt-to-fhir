@@ -123,10 +123,7 @@ class TPUProcessor extends BaseProcessor {
     );
     
     if (gpuParent) {
-      tpuConcept.property.push({
-        code: "parent",
-        valueCode: String(gpuParent[0])
-      });
+      this.addParentRelationship(tpuConcept, String(gpuParent[0]), tpuCode);
     }
   }
 
@@ -142,10 +139,7 @@ class TPUProcessor extends BaseProcessor {
     );
     
     if (tpParent) {
-      tpuConcept.property.push({
-        code: "parent",
-        valueCode: String(tpParent[0])
-      });
+      this.addParentRelationship(tpuConcept, String(tpParent[0]), tpuCode);
     }
   }
 
@@ -162,10 +156,7 @@ class TPUProcessor extends BaseProcessor {
     
     if (tppChildren && tppChildren.length > 0) {
       tppChildren.forEach(child => {
-        tpuConcept.property.push({
-          code: "child",
-          valueCode: String(child[1])
-        });
+        this.addChildRelationship(tpuConcept, String(child[1]), tpuCode);
       });
     }
   }

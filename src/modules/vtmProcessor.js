@@ -116,10 +116,7 @@ class VTMProcessor extends BaseProcessor {
     
     if (subsParents && subsParents.length > 0) {
       subsParents.forEach(parent => {
-        vtmConcept.property.push({
-          code: "parent",
-          valueCode: String(parent[0])
-        });
+        this.addParentRelationship(vtmConcept, String(parent[0]), vtmCode);
       });
     }
   }
@@ -137,10 +134,7 @@ class VTMProcessor extends BaseProcessor {
     
     if (gpChildren && gpChildren.length > 0) {
       gpChildren.forEach(child => {
-        vtmConcept.property.push({
-          code: "child",
-          valueCode: String(child[1])
-        });
+        this.addChildRelationship(vtmConcept, String(child[1]), vtmCode);
       });
     }
   }

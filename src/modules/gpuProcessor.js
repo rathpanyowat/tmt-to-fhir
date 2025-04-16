@@ -124,10 +124,7 @@ class GPUProcessor extends BaseProcessor {
     
     if (gpParents && gpParents.length > 0) {
       gpParents.forEach(parent => {
-        gpuConcept.property.push({
-          code: "parent",
-          valueCode: String(parent[0])
-        });
+        this.addParentRelationship(gpuConcept, String(parent[0]), gpuCode);
       });
     }
   }
@@ -145,10 +142,7 @@ class GPUProcessor extends BaseProcessor {
     
     if (tpuChildren && tpuChildren.length > 0) {
       tpuChildren.forEach(child => {
-        gpuConcept.property.push({
-          code: "child",
-          valueCode: String(child[1])
-        });
+        this.addChildRelationship(gpuConcept, String(child[1]), gpuCode);
       });
     }
   }
@@ -166,10 +160,7 @@ class GPUProcessor extends BaseProcessor {
     
     if (gppChildren && gppChildren.length > 0) {
       gppChildren.forEach(child => {
-        gpuConcept.property.push({
-          code: "child",
-          valueCode: String(child[1])
-        });
+        this.addChildRelationship(gpuConcept, String(child[1]), gpuCode);
       });
     }
   }

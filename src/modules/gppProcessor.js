@@ -127,10 +127,7 @@ class GPPProcessor extends BaseProcessor {
     
     if (gpuParents && gpuParents.length > 0) {
       gpuParents.forEach(parent => {
-        gppConcept.property.push({
-          code: "parent",
-          valueCode: String(parent[0])
-        });
+        this.addParentRelationship(gppConcept, String(parent[0]), gppCode);
       });
     }
   }
@@ -148,10 +145,7 @@ class GPPProcessor extends BaseProcessor {
     
     if (gppParents && gppParents.length > 0) {
       gppParents.forEach(parent => {
-        gppConcept.property.push({
-          code: "parent",
-          valueCode: String(parent[0])
-        });
+        this.addParentRelationship(gppConcept, String(parent[0]), gppCode);
       });
     }
   }
@@ -169,10 +163,7 @@ class GPPProcessor extends BaseProcessor {
     
     if (tppChildren && tppChildren.length > 0) {
       tppChildren.forEach(child => {
-        gppConcept.property.push({
-          code: "child",
-          valueCode: String(child[1])
-        });
+        this.addChildRelationship(gppConcept, String(child[1]), gppCode);
       });
     }
   }
@@ -190,10 +181,7 @@ class GPPProcessor extends BaseProcessor {
     
     if (gppChildren && gppChildren.length > 0) {
       gppChildren.forEach(child => {
-        gppConcept.property.push({
-          code: "child",
-          valueCode: String(child[1])
-        });
+        this.addChildRelationship(gppConcept, String(child[1]), gppCode);
       });
     }
   }

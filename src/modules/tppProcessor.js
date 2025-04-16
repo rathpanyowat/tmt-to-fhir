@@ -128,10 +128,7 @@ class TPPProcessor extends BaseProcessor {
     
     if (tpuParents && tpuParents.length > 0) {
       tpuParents.forEach(parent => {
-        tppConcept.property.push({
-          code: "parent",
-          valueCode: String(parent[0])
-        });
+        this.addParentRelationship(tppConcept, String(parent[0]), tppCode);
       });
     }
   }
@@ -149,10 +146,7 @@ class TPPProcessor extends BaseProcessor {
     
     if (gppParents && gppParents.length > 0) {
       gppParents.forEach(parent => {
-        tppConcept.property.push({
-          code: "parent",
-          valueCode: String(parent[0])
-        });
+        this.addParentRelationship(tppConcept, String(parent[0]), tppCode);
       });
     }
   }
@@ -170,10 +164,7 @@ class TPPProcessor extends BaseProcessor {
     
     if (tppParents && tppParents.length > 0) {
       tppParents.forEach(parent => {
-        tppConcept.property.push({
-          code: "parent",
-          valueCode: String(parent[0])
-        });
+        this.addParentRelationship(tppConcept, String(parent[0]), tppCode);
       });
     }
   }
@@ -191,10 +182,7 @@ class TPPProcessor extends BaseProcessor {
     
     if (tppChildren && tppChildren.length > 0) {
       tppChildren.forEach(child => {
-        tppConcept.property.push({
-          code: "child",
-          valueCode: String(child[1])
-        });
+        this.addChildRelationship(tppConcept, String(child[1]), tppCode);
       });
     }
   }

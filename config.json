@@ -1,6 +1,10 @@
 {
   "version": "20250407",
   "output": {
-    "fileName": "TMT-CS.json"
+    "fileName": "CS-TMT.json"
+  },
+  "validation": {
+    "cleanupInvalidReferences": true,
+    "generateReport": true
   }
 } 
