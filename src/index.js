@@ -66,6 +66,46 @@ function formatDateFromVersion(versionDate) {
 }
 
 /**
+ * Removes duplicate concepts from the template based on concept.code
+ * @param {Object} templateJson - The template JSON object
+ * @returns {number} The number of duplicate concepts removed
+ */
+function removeDuplicateConcepts(templateJson) {
+  if (!templateJson.concept || !Array.isArray(templateJson.concept)) {
+    console.log('No concepts found in template');
+    return 0;
+  }
+
+  console.log(`Total concepts before deduplication: ${templateJson.concept.length}`);
+  
+  // Create a map to store unique concepts by code
+  const uniqueConceptsMap = new Map();
+  
+  // Iterate through all concepts and keep only the first occurrence of each code
+  for (const concept of templateJson.concept) {
+    if (concept && concept.code) {
+      if (!uniqueConceptsMap.has(concept.code)) {
+        uniqueConceptsMap.set(concept.code, concept);
+      }
+    }
+  }
+  
+  // Create new array with only unique concepts
+  const uniqueConcepts = Array.from(uniqueConceptsMap.values());
+  
+  // Calculate number of duplicates removed
+  const removedCount = templateJson.concept.length - uniqueConcepts.length;
+  
+  // Update the template with deduplicated concepts
+  templateJson.concept = uniqueConcepts;
+  
+  console.log(`Removed ${removedCount} duplicate concepts`);
+  console.log(`Total concepts after deduplication: ${templateJson.concept.length}`);
+  
+  return removedCount;
+}
+
+/**
  * Main function to process the TMT data
  */
 async function processTMTData() {
@@ -144,6 +184,10 @@ async function processTMTData() {
     
     // Step 9: Process TPP data
     processTPPData(templateJson, tmtDir.path, tmtBonusDir.path);
+    
+    // Step 10: Remove duplicate concepts
+    console.log('Removing duplicate concepts...');
+    removeDuplicateConcepts(templateJson);
     
     // Write the output file
     console.log('Writing output file...');

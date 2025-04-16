@@ -8,7 +8,7 @@
   "experimental": false,
   "date": "2025-04-07T00:00:00+07:00",
   "publisher": "Thai Health Information Standards Development Center",
-  "description": "LOINC is a common language (set of identifiers, names, and codes) for clinical and laboratory observations.",
+  "description": "TMT is standard code and dictionary for medicinal products in Thailand.",
   "copyright": "This content from TMT® is copyright © Thai Health Information Standards Development Center",
   "caseSensitive": false,
   "valueSet": "http://tmt.this.or.th/vs",
