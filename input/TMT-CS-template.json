@@ -18,39 +18,15 @@
   "content": "complete",
   "filter": [
     {
-      "code": "CLASS",
+      "code": "class",
       "description": "Allows the selection of a set of TMT codes with a common property value.",
-      "operator": [
-        "="
-      ],
+      "operator": ["=", "regex"],
       "value": "The value of the property."
     },
     {
-      "code": "STATUS",
+      "code": "status",
       "description": "Allows the selection of a set of TMT codes with a common property value.",
-      "operator": [
-        "="
-      ],
-      "value": "The value of the property."
-    },
-    {
-      "code": "parent",
-      "description": "Allows for the selection of a set of codes base on their appearance in the TMT hierarchy.",
-      "operator": [
-        "exists",
-        "=",
-        "in"
-      ],
-      "value": "The value of the property."
-    },
-    {
-      "code": "child",
-      "description": "Allows for the selection of a set of codes base on their appearance in the TMT hierarchy.",
-      "operator": [
-        "exists",
-        "=",
-        "in"
-      ],
+      "operator": ["="],
       "value": "The value of the property."
     }
   ],
